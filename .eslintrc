@@ -1,0 +1,59 @@
+{
+  "extends": [ "airbnb-base", "plugin:@typescript-eslint/recommended"],
+  "env": {
+      "mocha": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["mocha", "@typescript-eslint"],
+  "rules": {
+      "import/no-extraneous-dependencies": ["error", {"devDependencies": true, "optionalDependencies": false, "peerDependencies": false}],
+      "comma-dangle": ["error", {
+        "arrays": "always-multiline",
+        "objects": "always-multiline",
+        "imports": "never",
+        "exports": "never",
+        "functions": "never"
+      }],
+      "quotes": ["error", "double"],
+      "no-use-before-define": ["error", {
+        "functions": false,
+        "classes": true
+      }],
+      "max-len": ["warn", {
+        "code": 120
+      }],
+      "max-params": ["warn", {
+        "max": 3
+      }],
+      "import/order": ["error", {"groups":["builtin", "external", "parent", "sibling", "index"] }],
+      "import/no-useless-path-segments": "warn",
+      "prefer-destructuring": "off",
+      "prefer-object-spread": "warn",
+      "object-curly-newline": ["error", { "consistent": true }],
+      "no-underscore-dangle": "off",
+      "arrow-body-style": "off",
+      "consistent-return": "off",
+      "arrow-parens": ["error", "always"],
+      "no-console": "error",
+      "padding-line-between-statements": [
+        "error",
+        { "blankLine": "always", "prev": ["const", "let", "var"], "next": "*" },
+        { "blankLine": "any",    "prev": ["const", "let", "var"], "next": ["const", "let", "var"] },
+        { "blankLine": "always", "prev": "*", "next": "return" },
+        { "blankLine": "always", "prev": ["const", "let", "var", "block-like"], "next": "if" }
+      ],
+      "mocha/no-exclusive-tests": "error",
+      "no-extra-boolean-cast": "off",
+      "no-prototype-builtins": "off",
+      "indent": "off",
+      "@typescript-eslint/no-unused-vars": "error",
+      "@typescript-eslint/indent": ["warn", 2],
+      "@typescript-eslint/explicit-function-return-type": "off",
+      "@typescript-eslint/no-var-requires": "off",
+      "@typescript-eslint/camelcase": "off",
+      "@typescript-eslint/no-use-before-define": ["error", {
+        "functions": false,
+        "classes": true
+      }]
+  }
+}
