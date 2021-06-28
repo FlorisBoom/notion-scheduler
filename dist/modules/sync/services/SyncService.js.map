@@ -1,0 +1,1 @@
+{"version":3,"file":"SyncService.js","sourceRoot":"","sources":["../../../../src/modules/sync/services/SyncService.ts"],"names":[],"mappings":";;;;;;;;;;;;;AAAA,kEAA0C;AAC1C,8DAAoE;AAEpE,SAAe,GAAG;;QAChB,gBAAM,CAAC,GAAG,CAAC;YACT,KAAK,EAAE,MAAM;YACb,OAAO,EAAE,8BAA8B;SACxC,CAAC,CAAC;QAEH,MAAM,cAAc,GAAG,MAAM,4BAAiB,EAAE,CAAC;IACnD,CAAC;CAAA;AAED,iBAAS,EAAE,GAAG,EAAE,CAAC"}

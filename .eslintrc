@@ -55,5 +55,10 @@
         "functions": false,
         "classes": true
       }]
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
   }
 }

@@ -5,7 +5,13 @@
     "target": "es6",
     "moduleResolution": "node",
     "sourceMap": true,
-    "outDir": "dist"
+    "outDir": "dist",
+    "baseUrl": "./src",
+    "paths": {
+      "@shared/*": ["shared/*"],
+      "@database/*": ["modules/database/*"],
+      "@sync/*": ["modules/sync/*"],
+    }
   },
   "lib": [
     "es2015"
