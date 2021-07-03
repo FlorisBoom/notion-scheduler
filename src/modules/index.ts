@@ -1,4 +1,3 @@
-import path from "path";
 import { CronJob } from "cron";
 import express from "express";
 import Logger from "@shared/utils/Logger";
@@ -9,10 +8,12 @@ const app = express();
 app.listen(3000);
 
 const syncJob = new CronJob({
-  cronTime: "*/1 * * * *", // Every 10 minutes
+  cronTime: "0 0/2 * * *", // Every 2 hours
   async onTick() {
     try {
-      await SyncService.run();
+      await SyncService.run()
+        // eslint-disable-next-line no-console
+        .catch((err) => console.log(err));
     } catch (err) {
       Logger.log({
         level: "error",

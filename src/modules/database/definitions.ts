@@ -1,4 +1,5 @@
 export type NotionPageDto = {
+  id: string;
   type: string;
   title: string;
   link: string;
@@ -6,5 +7,6 @@ export type NotionPageDto = {
   currentProgress: number;
   latestRelease: number;
   seenLatestRelease: boolean;
-  releaseSchedule: Array<string>,
+  releaseSchedule: string | null;
+  latestReleaseUpdatedAt: string | null;
 };

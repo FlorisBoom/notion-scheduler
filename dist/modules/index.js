@@ -19,11 +19,12 @@ const SyncService_1 = __importDefault(require("./sync/services/SyncService"));
 const app = express_1.default();
 app.listen(3000);
 const syncJob = new cron_1.CronJob({
-    cronTime: "*/1 * * * *",
+    cronTime: "0/1 * * * *",
     onTick() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                yield SyncService_1.default.run();
+                yield SyncService_1.default.run()
+                    .catch((err) => console.log(err));
             }
             catch (err) {
                 Logger_1.default.log({

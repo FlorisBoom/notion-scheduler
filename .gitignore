@@ -20,3 +20,4 @@ database*.json
 .tern-port
 debug.log
 yarn.lock
+./dist
