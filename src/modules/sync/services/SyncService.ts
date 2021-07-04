@@ -20,7 +20,7 @@ async function updatePages(pagesDto: NotionPageDto[]): Promise<void> {
   await Promise.each(pagesDto, async (page: NotionPageDto) => {
     if (
       (!page.releaseSchedule || page.releaseSchedule === getCurrentDay())
-      && page.status !== EPageStatus.COMPLETED || page.status !== EPageStatus.DROPPED) {
+      && (page.status !== EPageStatus.COMPLETED && page.status !== EPageStatus.DROPPED)) {
       await axios.get(page.link)
         .then(async (response) => {
           if (response.status === 200) {
