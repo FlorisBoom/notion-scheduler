@@ -10,3 +10,14 @@ export type NotionPageDto = {
   releaseSchedule: string | null;
   latestReleaseUpdatedAt: string | null;
 };
+
+// eslint-disable-next-line no-shadow
+export enum EPageStatus {
+  COMPLETED = "Completed",
+  DROPPED = "Dropped",
+  PLANNING_TO_READ = "Planning To Read",
+  PLANNING_TO_WATCH = "Planning To Watch",
+  READING = "Reading",
+  WATCHING = "Watching",
+  ON_HOLD = "On Hold",
+}

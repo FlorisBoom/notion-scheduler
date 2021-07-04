@@ -2,7 +2,7 @@ import axios from "axios";
 import { Promise } from "bluebird";
 import * as cheerio from "cheerio";
 import Logger from "@shared/utils/Logger";
-import { NotionPageDto } from "@database/definitions";
+import { NotionPageDto, EPageStatus } from "@database/definitions";
 import { getNotionPages, updateNotionPage } from "@database/repositories/Database";
 
 async function run(): Promise<void> {
@@ -18,7 +18,9 @@ async function run(): Promise<void> {
 
 async function updatePages(pagesDto: NotionPageDto[]): Promise<void> {
   await Promise.each(pagesDto, async (page: NotionPageDto) => {
-    if (!page.releaseSchedule || page.releaseSchedule === getCurrentDay()) {
+    if (
+      (!page.releaseSchedule || page.releaseSchedule === getCurrentDay())
+      && page.status !== EPageStatus.COMPLETED || page.status !== EPageStatus.DROPPED) {
       await axios.get(page.link)
         .then(async (response) => {
           if (response.status === 200) {
