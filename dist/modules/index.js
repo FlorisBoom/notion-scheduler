@@ -23,8 +23,7 @@ const syncJob = new cron_1.CronJob({
     onTick() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                yield SyncService_1.default.run()
-                    .catch((err) => console.log(err));
+                yield SyncService_1.default.run();
             }
             catch (err) {
                 Logger_1.default.log({

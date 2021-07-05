@@ -34,6 +34,7 @@ const axios_1 = __importDefault(require("axios"));
 const bluebird_1 = require("bluebird");
 const cheerio = __importStar(require("cheerio"));
 const Logger_1 = __importDefault(require("../../../shared/utils/Logger"));
+const definitions_1 = require("../../database/definitions");
 const Database_1 = require("../../database/repositories/Database");
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -42,15 +43,14 @@ function run() {
             message: "Running Notion database sync",
         });
         const pagesDto = yield Database_1.getNotionPages();
-        yield updatePages(pagesDto);
+        yield updatePages(pagesDto).catch((err) => console.log(err));
     });
 }
 function updatePages(pagesDto) {
     return __awaiter(this, void 0, void 0, function* () {
-        // const document = cheerio.load(fs.readFileSync(__dirname + "/test.html"));
-        // await updatedLatestReleasePahe(document, pagesDto[0].id, pagesDto[0].latestRelease);
         yield bluebird_1.Promise.each(pagesDto, (page) => __awaiter(this, void 0, void 0, function* () {
-            if (!page.releaseSchedule || page.releaseSchedule === getCurrentDay()) {
+            if ((!page.releaseSchedule || page.releaseSchedule === getCurrentDay())
+                && (page.status !== definitions_1.EPageStatus.COMPLETED && page.status !== definitions_1.EPageStatus.DROPPED)) {
                 yield axios_1.default.get(page.link)
                     .then((response) => __awaiter(this, void 0, void 0, function* () {
                     if (response.status === 200) {
@@ -60,22 +60,22 @@ function updatePages(pagesDto) {
                         });
                         const document = cheerio.load(response.data);
                         const url = new URL(page.link);
-                        console.log("page = ", page);
                         switch (url.hostname) {
                             case "pahe.win":
-                                yield updatedLatestReleasePahe(document, page.id, page.latestRelease);
+                                console.log(url);
+                                yield updateLatestReleasePahe(document, page.id, page.latestRelease);
                                 break;
                             case "toomics.com":
-                                yield updatedLatestReleaseToomics(document, page.id, page.latestRelease);
+                                yield updateLatestReleaseToomics(document, page.id, page.latestRelease);
                                 break;
                             case "mangahub.io":
-                                yield updatedLatestReleaseMangahub(document, page.id, page.latestRelease);
+                                yield updateLatestReleaseMangahub(document, page.id, page.latestRelease);
                                 break;
                             case "mangakakalot.com":
-                                yield updatedLatestReleaseMangakakalot(document, page.id, page.latestRelease);
+                                yield updateLatestReleaseMangakakalot(document, page.id, page.latestRelease);
                                 break;
                             case "readmanganato":
-                                yield updatedLatestReleaseManganato(document, page.id, page.latestRelease);
+                                yield updateLatestReleaseManganato(document, page.id, page.latestRelease);
                                 break;
                             default:
                                 break;
@@ -91,25 +91,19 @@ function updatePages(pagesDto) {
         }));
     });
 }
-function updatedLatestReleasePahe(document, pageId, currentRelease) {
+function updateLatestReleasePahe(document, pageId, currentRelease) {
     return __awaiter(this, void 0, void 0, function* () {
-        const latestRelease = document("title").text().split("-")[1].match(/\d+/g)[0];
-        // let latestRelease = "";
-        // if (latestReleaseArray.length === 1) {
-        //   latestRelease = latestReleaseArray[0];
-        // } else {
-        //   for (let i = 1; i < latestReleaseArray.length; i += 1) {
-        //     latestRelease = latestRelease.concat(latestReleaseArray[i]);
-        //   }
-        // }
-        // console.log("latestReleaseArray = ", latestReleaseArray)
-        // console.log("latestRelease = ", latestRelease)
+        console.log("test = ", document("title").text().split("-"));
+        const latestRelease = (document("title").text().split("-").length > 1)
+            ? document("title").text().split("-")[1].match(/\d+/g)[0]
+            : document("title").text().split("-")[0].match(/\d+/g)[0];
+        console.log("latestRelease = ", latestRelease);
         if (currentRelease !== +latestRelease) {
             yield Database_1.updateNotionPage(pageId, +latestRelease, new Date());
         }
     });
 }
-function updatedLatestReleaseToomics(document, pageId, currentRelease) {
+function updateLatestReleaseToomics(document, pageId, currentRelease) {
     return __awaiter(this, void 0, void 0, function* () {
         const latestRelease = document(".normal_ep")
             .last()
@@ -122,7 +116,7 @@ function updatedLatestReleaseToomics(document, pageId, currentRelease) {
         }
     });
 }
-function updatedLatestReleaseMangahub(document, pageId, currentRelease) {
+function updateLatestReleaseMangahub(document, pageId, currentRelease) {
     return __awaiter(this, void 0, void 0, function* () {
         const latestRelease = document(".list-group-item")
             .first()
@@ -137,7 +131,7 @@ function updatedLatestReleaseMangahub(document, pageId, currentRelease) {
         }
     });
 }
-function updatedLatestReleaseMangakakalot(document, pageId, currentRelease) {
+function updateLatestReleaseMangakakalot(document, pageId, currentRelease) {
     return __awaiter(this, void 0, void 0, function* () {
         const latestRelease = document(".chapter-list")
             .children(".row")
@@ -152,7 +146,7 @@ function updatedLatestReleaseMangakakalot(document, pageId, currentRelease) {
         }
     });
 }
-function updatedLatestReleaseManganato(document, pageId, currentRelease) {
+function updateLatestReleaseManganato(document, pageId, currentRelease) {
     return __awaiter(this, void 0, void 0, function* () {
         const latestRelease = document(".row-content-chapter")
             .children("li")

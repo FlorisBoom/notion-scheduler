@@ -13,8 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateNotionPage = exports.getNotionPages = void 0;
-const Notion_1 = __importDefault(require("../../../shared/config/Notion"));
 const bluebird_1 = require("bluebird");
+const Notion_1 = __importDefault(require("../../../shared/config/Notion"));
 const NotionPage_1 = __importDefault(require("../dto/NotionPage"));
 const databaseId = "ddc42ff509614095b9632a28e19f7429";
 function getNotionPages() {
@@ -64,15 +64,4 @@ function updateNotionPage(pageId, latestRelease, updatedAt) {
     });
 }
 exports.updateNotionPage = updateNotionPage;
-function getMorePages(cursor) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const result = yield Notion_1.default.databases.query({
-            database_id: "ddc42ff509614095b9632a28e19f7429",
-            start_cursor: cursor,
-        });
-        if (result.has_more) {
-            yield getMorePages(result.next_cursor);
-        }
-    });
-}
 //# sourceMappingURL=Database.js.map

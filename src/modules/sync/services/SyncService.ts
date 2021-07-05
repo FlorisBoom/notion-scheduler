@@ -34,19 +34,19 @@ async function updatePages(pagesDto: NotionPageDto[]): Promise<void> {
 
             switch (url.hostname) {
               case "pahe.win":
-                await updatedLatestReleasePahe(document, page.id, page.latestRelease);
+                await updateLatestReleasePahe(document, page.id, page.latestRelease);
                 break;
               case "toomics.com":
-                await updatedLatestReleaseToomics(document, page.id, page.latestRelease);
+                await updateLatestReleaseToomics(document, page.id, page.latestRelease);
                 break;
               case "mangahub.io":
-                await updatedLatestReleaseMangahub(document, page.id, page.latestRelease);
+                await updateLatestReleaseMangahub(document, page.id, page.latestRelease);
                 break;
               case "mangakakalot.com":
-                await updatedLatestReleaseMangakakalot(document, page.id, page.latestRelease);
+                await updateLatestReleaseMangakakalot(document, page.id, page.latestRelease);
                 break;
               case "readmanganato":
-                await updatedLatestReleaseManganato(document, page.id, page.latestRelease);
+                await updateLatestReleaseManganato(document, page.id, page.latestRelease);
                 break;
               default:
                 break;
@@ -62,15 +62,17 @@ async function updatePages(pagesDto: NotionPageDto[]): Promise<void> {
   });
 }
 
-async function updatedLatestReleasePahe(document: any, pageId: string, currentRelease: number): Promise<void> {
-  const latestRelease = document("title").text().split("-")[1].match(/\d+/g)[0];
+async function updateLatestReleasePahe(document: any, pageId: string, currentRelease: number): Promise<void> {
+  const latestRelease = (document("title").text().split("-").length > 1)
+    ? document("title").text().split("-")[1].match(/\d+/g)[0]
+    : document("title").text().split("-")[0].match(/\d+/g)[0];
 
   if (currentRelease !== +latestRelease) {
     await updateNotionPage(pageId, +latestRelease, new Date());
   }
 }
 
-async function updatedLatestReleaseToomics(document: any, pageId: string, currentRelease: number): Promise<void> {
+async function updateLatestReleaseToomics(document: any, pageId: string, currentRelease: number): Promise<void> {
   const latestRelease = document(".normal_ep")
     .last()
     .children("a")
@@ -83,7 +85,7 @@ async function updatedLatestReleaseToomics(document: any, pageId: string, curren
   }
 }
 
-async function updatedLatestReleaseMangahub(document: any, pageId: string, currentRelease: number): Promise<void> {
+async function updateLatestReleaseMangahub(document: any, pageId: string, currentRelease: number): Promise<void> {
   const latestRelease = document(".list-group-item")
     .first()
     .children("a")
@@ -98,7 +100,7 @@ async function updatedLatestReleaseMangahub(document: any, pageId: string, curre
   }
 }
 
-async function updatedLatestReleaseMangakakalot(document: any, pageId: string, currentRelease: number): Promise<void> {
+async function updateLatestReleaseMangakakalot(document: any, pageId: string, currentRelease: number): Promise<void> {
   const latestRelease = document(".chapter-list")
     .children(".row")
     .first()
@@ -113,7 +115,7 @@ async function updatedLatestReleaseMangakakalot(document: any, pageId: string, c
   }
 }
 
-async function updatedLatestReleaseManganato(document: any, pageId: string, currentRelease: number): Promise<void> {
+async function updateLatestReleaseManganato(document: any, pageId: string, currentRelease: number): Promise<void> {
   const latestRelease = document(".row-content-chapter")
     .children("li")
     .first()

@@ -11,9 +11,7 @@ const syncJob = new CronJob({
   cronTime: "0 0/2 * * *", // Every 2 hours
   async onTick() {
     try {
-      await SyncService.run()
-        // eslint-disable-next-line no-console
-        .catch((err) => console.log(err));
+      await SyncService.run();
     } catch (err) {
       Logger.log({
         level: "error",
