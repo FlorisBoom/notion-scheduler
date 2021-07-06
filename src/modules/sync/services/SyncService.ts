@@ -68,7 +68,7 @@ async function updateLatestReleasePahe(document: any, pageId: string, currentRel
     : document("title").text().split("-")[0].match(/\d+/g)[0];
 
   if (currentRelease !== +latestRelease) {
-    await updateNotionPage(pageId, +latestRelease, new Date());
+    await updateNotionPage(pageId, +latestRelease);
   }
 }
 
@@ -81,7 +81,7 @@ async function updateLatestReleaseToomics(document: any, pageId: string, current
     .text();
 
   if (currentRelease !== +latestRelease) {
-    await updateNotionPage(pageId, +latestRelease, new Date());
+    await updateNotionPage(pageId, +latestRelease);
   }
 }
 
@@ -96,7 +96,7 @@ async function updateLatestReleaseMangahub(document: any, pageId: string, curren
     .replace(/^\D+/g, "");
 
   if (currentRelease !== +latestRelease) {
-    await updateNotionPage(pageId, +latestRelease, new Date());
+    await updateNotionPage(pageId, +latestRelease);
   }
 }
 
@@ -111,7 +111,7 @@ async function updateLatestReleaseMangakakalot(document: any, pageId: string, cu
     .replace(/^\D+/g, "");
 
   if (currentRelease !== +latestRelease) {
-    await updateNotionPage(pageId, +latestRelease, new Date());
+    await updateNotionPage(pageId, +latestRelease);
   }
 }
 
@@ -124,7 +124,7 @@ async function updateLatestReleaseManganato(document: any, pageId: string, curre
     .replace(/^\D+/g, "");
 
   if (currentRelease !== +latestRelease) {
-    await updateNotionPage(pageId, +latestRelease, new Date());
+    await updateNotionPage(pageId, +latestRelease);
   }
 }
 

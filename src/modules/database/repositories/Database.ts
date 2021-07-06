@@ -1,4 +1,5 @@
 import { Promise } from "bluebird";
+import { DateTime } from "luxon";
 import Notion from "@shared/config/Notion";
 import { NotionPageDto } from "@database/definitions";
 import createNotionPageDto from "@database/dto/NotionPage";
@@ -29,14 +30,14 @@ async function getNotionPages(): Promise<NotionPageDto[]> {
   return result.results.map((page) => createNotionPageDto(page));
 }
 
-async function updateNotionPage(pageId: string, latestRelease: number, updatedAt: Date): Promise<void> {
+async function updateNotionPage(pageId: string, latestRelease: number): Promise<void> {
   await Notion.pages.update({
     page_id: pageId,
     properties: {
       "Latest Release Updated At": {
         type: "date",
         date: {
-          start: updatedAt.toISOString(),
+          start: DateTime.now().setZone("Europe/Amsterdam").toISO(),
         },
       },
       "Latest Release": {

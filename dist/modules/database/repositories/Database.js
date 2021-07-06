@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateNotionPage = exports.getNotionPages = void 0;
 const bluebird_1 = require("bluebird");
+const luxon_1 = require("luxon");
 const Notion_1 = __importDefault(require("../../../shared/config/Notion"));
 const NotionPage_1 = __importDefault(require("../dto/NotionPage"));
 const databaseId = "ddc42ff509614095b9632a28e19f7429";
@@ -40,7 +41,7 @@ function getNotionPages() {
     });
 }
 exports.getNotionPages = getNotionPages;
-function updateNotionPage(pageId, latestRelease, updatedAt) {
+function updateNotionPage(pageId, latestRelease) {
     return __awaiter(this, void 0, void 0, function* () {
         yield Notion_1.default.pages.update({
             page_id: pageId,
@@ -48,7 +49,7 @@ function updateNotionPage(pageId, latestRelease, updatedAt) {
                 "Latest Release Updated At": {
                     type: "date",
                     date: {
-                        start: updatedAt.toISOString(),
+                        start: luxon_1.DateTime.now().setZone("Europe/Amsterdam").toISO(),
                     },
                 },
                 "Latest Release": {

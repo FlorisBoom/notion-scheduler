@@ -43,7 +43,7 @@ function run() {
             message: "Running Notion database sync",
         });
         const pagesDto = yield Database_1.getNotionPages();
-        yield updatePages(pagesDto).catch((err) => console.log(err));
+        yield updatePages(pagesDto);
     });
 }
 function updatePages(pagesDto) {
@@ -62,7 +62,6 @@ function updatePages(pagesDto) {
                         const url = new URL(page.link);
                         switch (url.hostname) {
                             case "pahe.win":
-                                console.log(url);
                                 yield updateLatestReleasePahe(document, page.id, page.latestRelease);
                                 break;
                             case "toomics.com":
@@ -93,13 +92,11 @@ function updatePages(pagesDto) {
 }
 function updateLatestReleasePahe(document, pageId, currentRelease) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log("test = ", document("title").text().split("-"));
         const latestRelease = (document("title").text().split("-").length > 1)
             ? document("title").text().split("-")[1].match(/\d+/g)[0]
             : document("title").text().split("-")[0].match(/\d+/g)[0];
-        console.log("latestRelease = ", latestRelease);
         if (currentRelease !== +latestRelease) {
-            yield Database_1.updateNotionPage(pageId, +latestRelease, new Date());
+            yield Database_1.updateNotionPage(pageId, +latestRelease);
         }
     });
 }
@@ -112,7 +109,7 @@ function updateLatestReleaseToomics(document, pageId, currentRelease) {
             .children("span")
             .text();
         if (currentRelease !== +latestRelease) {
-            yield Database_1.updateNotionPage(pageId, +latestRelease, new Date());
+            yield Database_1.updateNotionPage(pageId, +latestRelease);
         }
     });
 }
@@ -127,7 +124,7 @@ function updateLatestReleaseMangahub(document, pageId, currentRelease) {
             .text()
             .replace(/^\D+/g, "");
         if (currentRelease !== +latestRelease) {
-            yield Database_1.updateNotionPage(pageId, +latestRelease, new Date());
+            yield Database_1.updateNotionPage(pageId, +latestRelease);
         }
     });
 }
@@ -142,7 +139,7 @@ function updateLatestReleaseMangakakalot(document, pageId, currentRelease) {
             .text()
             .replace(/^\D+/g, "");
         if (currentRelease !== +latestRelease) {
-            yield Database_1.updateNotionPage(pageId, +latestRelease, new Date());
+            yield Database_1.updateNotionPage(pageId, +latestRelease);
         }
     });
 }
@@ -155,7 +152,7 @@ function updateLatestReleaseManganato(document, pageId, currentRelease) {
             .text()
             .replace(/^\D+/g, "");
         if (currentRelease !== +latestRelease) {
-            yield Database_1.updateNotionPage(pageId, +latestRelease, new Date());
+            yield Database_1.updateNotionPage(pageId, +latestRelease);
         }
     });
 }
