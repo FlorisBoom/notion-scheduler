@@ -45,7 +45,7 @@ async function updatePages(pagesDto: NotionPageDto[]): Promise<void> {
               case "mangakakalot.com":
                 await updateLatestReleaseMangakakalot(document, page.id, page.latestRelease);
                 break;
-              case "readmanganato":
+              case "readmanganato.com":
                 await updateLatestReleaseManganato(document, page.id, page.latestRelease);
                 break;
               default:
@@ -121,7 +121,7 @@ async function updateLatestReleaseManganato(document: any, pageId: string, curre
     .first()
     .children("a")
     .text()
-    .replace(/^\D+/g, "");
+    .match(/\d+/g)[0];
 
   if (currentRelease !== +latestRelease) {
     await updateNotionPage(pageId, +latestRelease);

@@ -51,41 +51,44 @@ function updatePages(pagesDto) {
         yield bluebird_1.Promise.each(pagesDto, (page) => __awaiter(this, void 0, void 0, function* () {
             if ((!page.releaseSchedule || page.releaseSchedule === getCurrentDay())
                 && (page.status !== definitions_1.EPageStatus.COMPLETED && page.status !== definitions_1.EPageStatus.DROPPED)) {
-                yield axios_1.default.get(page.link)
-                    .then((response) => __awaiter(this, void 0, void 0, function* () {
-                    if (response.status === 200) {
-                        Logger_1.default.log({
-                            level: "info",
-                            message: `Syncing data for ${page.title}`,
-                        });
-                        const document = cheerio.load(response.data);
-                        const url = new URL(page.link);
-                        switch (url.hostname) {
-                            case "pahe.win":
-                                yield updateLatestReleasePahe(document, page.id, page.latestRelease);
-                                break;
-                            case "toomics.com":
-                                yield updateLatestReleaseToomics(document, page.id, page.latestRelease);
-                                break;
-                            case "mangahub.io":
-                                yield updateLatestReleaseMangahub(document, page.id, page.latestRelease);
-                                break;
-                            case "mangakakalot.com":
-                                yield updateLatestReleaseMangakakalot(document, page.id, page.latestRelease);
-                                break;
-                            case "readmanganato":
-                                yield updateLatestReleaseManganato(document, page.id, page.latestRelease);
-                                break;
-                            default:
-                                break;
+                if ((new URL(page.link)).hostname === "readmanganato.com") {
+                    console.log("page = ", page);
+                    yield axios_1.default.get(page.link)
+                        .then((response) => __awaiter(this, void 0, void 0, function* () {
+                        if (response.status === 200) {
+                            Logger_1.default.log({
+                                level: "info",
+                                message: `Syncing data for ${page.title}`,
+                            });
+                            const document = cheerio.load(response.data);
+                            const url = new URL(page.link);
+                            switch (url.hostname) {
+                                case "pahe.win":
+                                    yield updateLatestReleasePahe(document, page.id, page.latestRelease);
+                                    break;
+                                case "toomics.com":
+                                    yield updateLatestReleaseToomics(document, page.id, page.latestRelease);
+                                    break;
+                                case "mangahub.io":
+                                    yield updateLatestReleaseMangahub(document, page.id, page.latestRelease);
+                                    break;
+                                case "mangakakalot.com":
+                                    yield updateLatestReleaseMangakakalot(document, page.id, page.latestRelease);
+                                    break;
+                                case "readmanganato.com":
+                                    yield updateLatestReleaseManganato(document, page.id, page.latestRelease);
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
-                    }
-                })).catch((err) => {
-                    Logger_1.default.log({
-                        level: "error",
-                        message: err,
+                    })).catch((err) => {
+                        Logger_1.default.log({
+                            level: "error",
+                            message: err,
+                        });
                     });
-                });
+                }
             }
         }));
     });
@@ -150,7 +153,9 @@ function updateLatestReleaseManganato(document, pageId, currentRelease) {
             .first()
             .children("a")
             .text()
-            .replace(/^\D+/g, "");
+            .match(/\d+/g)[0];
+        console.log("latestRelease manganato = ", latestRelease.replace(/^\D+/g, ""));
+        console.log("latestRelease manganato = ", latestRelease.match(/\d+/g));
         if (currentRelease !== +latestRelease) {
             yield Database_1.updateNotionPage(pageId, +latestRelease);
         }
