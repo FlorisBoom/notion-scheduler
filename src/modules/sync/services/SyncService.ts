@@ -108,7 +108,7 @@ async function updateLatestReleaseMangakakalot(document: any, pageId: string, cu
     .first()
     .children("a")
     .text()
-    .replace(/^\D+/g, "");
+    .match(/\d+/g)[0];
 
   if (currentRelease !== +latestRelease) {
     await updateNotionPage(pageId, +latestRelease);

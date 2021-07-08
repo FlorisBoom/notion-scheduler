@@ -51,8 +51,7 @@ function updatePages(pagesDto) {
         yield bluebird_1.Promise.each(pagesDto, (page) => __awaiter(this, void 0, void 0, function* () {
             if ((!page.releaseSchedule || page.releaseSchedule === getCurrentDay())
                 && (page.status !== definitions_1.EPageStatus.COMPLETED && page.status !== definitions_1.EPageStatus.DROPPED)) {
-                if ((new URL(page.link)).hostname === "readmanganato.com") {
-                    console.log("page = ", page);
+                if ((new URL(page.link)).hostname === "mangakakalot.com") {
                     yield axios_1.default.get(page.link)
                         .then((response) => __awaiter(this, void 0, void 0, function* () {
                         if (response.status === 200) {
@@ -140,7 +139,8 @@ function updateLatestReleaseMangakakalot(document, pageId, currentRelease) {
             .first()
             .children("a")
             .text()
-            .replace(/^\D+/g, "");
+            .match(/\d+/g)[0];
+        console.log("latestRelease = ", latestRelease);
         if (currentRelease !== +latestRelease) {
             yield Database_1.updateNotionPage(pageId, +latestRelease);
         }
@@ -154,8 +154,6 @@ function updateLatestReleaseManganato(document, pageId, currentRelease) {
             .children("a")
             .text()
             .match(/\d+/g)[0];
-        console.log("latestRelease manganato = ", latestRelease.replace(/^\D+/g, ""));
-        console.log("latestRelease manganato = ", latestRelease.match(/\d+/g));
         if (currentRelease !== +latestRelease) {
             yield Database_1.updateNotionPage(pageId, +latestRelease);
         }
