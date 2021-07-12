@@ -55,7 +55,7 @@ async function updatePages(pagesDto: NotionPageDto[]): Promise<void> {
         }).catch((err) => {
           Logger.log({
             level: "error",
-            message: err,
+            message: `Failed to sync ${page.title} Error: ${err}`,
           });
         });
     }
