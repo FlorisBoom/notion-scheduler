@@ -7,27 +7,25 @@ import createNotionPageDto from "@database/dto/NotionPage";
 const databaseId = "ddc42ff509614095b9632a28e19f7429";
 
 async function getNotionPages(): Promise<NotionPageDto[]> {
-  const result = await Notion.databases.query({
+  const results = await Notion.databases.query({
     database_id: databaseId,
   });
-  let nextCursor = result.next_cursor;
+  let nextCursor = results.next_cursor;
 
-  if (result.has_more) {
-    await Promise.each(Array(10), async () => {
-      if (nextCursor) {
-        await Notion.databases.query({
-          database_id: databaseId,
-          start_cursor: nextCursor,
-        }).then((result2) => {
-          nextCursor = result2.next_cursor;
+  do {
+    /* eslint-disable no-await-in-loop */
+    await Notion.databases.query({
+      database_id: databaseId,
+      start_cursor: nextCursor,
+    // eslint-disable-next-line no-loop-func
+    }).then((results2) => {
+      nextCursor = results2.next_cursor;
 
-          result.results = result.results.concat(result2.results);
-        });
-      }
+      results.results = results.results.concat(results2.results);
     });
-  }
+  } while (nextCursor);
 
-  return result.results.map((page) => createNotionPageDto(page));
+  return results.results.map((page) => createNotionPageDto(page));
 }
 
 async function updateNotionPage(pageId: string, latestRelease: number): Promise<void> {
