@@ -33,9 +33,9 @@ async function updatePages(pagesDto: NotionPageDto[]): Promise<void> {
             const url = new URL(page.link);
 
             switch (url.hostname) {
-              case "pahe.win":
-                await updateLatestReleasePahe(document, page.id, page.latestRelease);
-                break;
+              // case "pahe.win":
+              //   await updateLatestReleasePahe(document, page.id, page.latestRelease);
+              //   break;
               case "toomics.com":
                 await updateLatestReleaseToomics(document, page.id, page.latestRelease);
                 break;
