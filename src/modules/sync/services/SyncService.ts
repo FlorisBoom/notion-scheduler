@@ -24,13 +24,14 @@ async function updatePages(pagesDto: NotionPageDto[]): Promise<void> {
       await axios.get(page.link)
         .then(async (response) => {
           if (response.status === 200) {
+            const url = new URL(page.link);
+
             Logger.log({
               level: "info",
-              message: `Syncing data for ${page.title}`,
+              message: `Syncing data for ${page.title} from ${url.hostname}`,
             });
 
             const document = cheerio.load(response.data);
-            const url = new URL(page.link);
 
             switch (url.hostname) {
               case "pahe.win":
