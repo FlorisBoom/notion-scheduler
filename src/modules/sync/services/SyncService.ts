@@ -20,7 +20,7 @@ async function updatePages(pagesDto: NotionPageDto[]): Promise<void> {
   await Promise.each(pagesDto, async (page: NotionPageDto) => {
     if (
       (!page.releaseSchedule || page.releaseSchedule === getCurrentDay())
-      && (
+      && !(
         page.status.includes(EPageStatus.COMPLETED)
         || page.status.includes(EPageStatus.DROPPED)
         || page.status.includes(EPageStatus.DONE_AIRING))

@@ -43,7 +43,15 @@ function run() {
             message: "Running Notion database sync",
         });
         const pagesDto = yield Database_1.getNotionPages();
-        console.log(pagesDto);
+        pagesDto.forEach(page => {
+            if (page.title === 'Enen no Shouboutai: Ni no Shou') {
+                console.log((!page.releaseSchedule || page.releaseSchedule === getCurrentDay()));
+                console.log(!(page.status.includes(definitions_1.EPageStatus.COMPLETED)
+                    || page.status.includes(definitions_1.EPageStatus.DROPPED)
+                    || page.status.includes(definitions_1.EPageStatus.DONE_AIRING)));
+                console.log(page.status.includes(definitions_1.EPageStatus.COMPLETED));
+            }
+        });
         // await updatePages(pagesDto);
     });
 }
@@ -51,7 +59,7 @@ function updatePages(pagesDto) {
     return __awaiter(this, void 0, void 0, function* () {
         yield bluebird_1.Promise.each(pagesDto, (page) => __awaiter(this, void 0, void 0, function* () {
             if ((!page.releaseSchedule || page.releaseSchedule === getCurrentDay())
-                && (page.status.includes(definitions_1.EPageStatus.COMPLETED)
+                && !(page.status.includes(definitions_1.EPageStatus.COMPLETED)
                     || page.status.includes(definitions_1.EPageStatus.DROPPED)
                     || page.status.includes(definitions_1.EPageStatus.DONE_AIRING))) {
                 yield axios_1.default.get(page.link)
