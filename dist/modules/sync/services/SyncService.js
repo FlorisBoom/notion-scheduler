@@ -43,7 +43,7 @@ function run() {
             message: "Running Notion database sync",
         });
         const pagesDto = yield Database_1.getNotionPages();
-        console.log('pagesDto = ', pagesDto.length);
+        console.log(pagesDto);
         // await updatePages(pagesDto);
     });
 }
@@ -51,16 +51,18 @@ function updatePages(pagesDto) {
     return __awaiter(this, void 0, void 0, function* () {
         yield bluebird_1.Promise.each(pagesDto, (page) => __awaiter(this, void 0, void 0, function* () {
             if ((!page.releaseSchedule || page.releaseSchedule === getCurrentDay())
-                && (page.status !== definitions_1.EPageStatus.COMPLETED && page.status !== definitions_1.EPageStatus.DROPPED)) {
+                && (page.status.includes(definitions_1.EPageStatus.COMPLETED)
+                    || page.status.includes(definitions_1.EPageStatus.DROPPED)
+                    || page.status.includes(definitions_1.EPageStatus.DONE_AIRING))) {
                 yield axios_1.default.get(page.link)
                     .then((response) => __awaiter(this, void 0, void 0, function* () {
                     if (response.status === 200) {
+                        const url = new URL(page.link);
                         Logger_1.default.log({
                             level: "info",
-                            message: `Syncing data for ${page.title}`,
+                            message: `Syncing data for ${page.title} from ${url.hostname}`,
                         });
                         const document = cheerio.load(response.data);
-                        const url = new URL(page.link);
                         switch (url.hostname) {
                             case "pahe.win":
                                 yield updateLatestReleasePahe(document, page.id, page.latestRelease);

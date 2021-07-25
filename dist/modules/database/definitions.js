@@ -11,5 +11,6 @@ var EPageStatus;
     EPageStatus["READING"] = "Reading";
     EPageStatus["WATCHING"] = "Watching";
     EPageStatus["ON_HOLD"] = "On Hold";
+    EPageStatus["DONE_AIRING"] = "Done Airing";
 })(EPageStatus = exports.EPageStatus || (exports.EPageStatus = {}));
 //# sourceMappingURL=definitions.js.map

@@ -3,7 +3,7 @@ export type NotionPageDto = {
   type: string;
   title: string;
   link: string;
-  status: string;
+  status: Array<string>;
   currentProgress: number;
   latestRelease: number;
   seenLatestRelease: boolean;
@@ -20,4 +20,5 @@ export enum EPageStatus {
   READING = "Reading",
   WATCHING = "Watching",
   ON_HOLD = "On Hold",
+  DONE_AIRING = "Done Airing"
 }

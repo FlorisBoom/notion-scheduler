@@ -6,7 +6,7 @@ module.exports = (page) => {
         type: properties.Type.select.name,
         title: properties.Title.title[0].plain_text,
         link: properties.Link.url,
-        status: properties.Status.select.name,
+        status: properties.Status.multi_select.map((select) => select.name),
         currentProgress: properties["Current Progress"].number,
         latestRelease: properties["Latest Release"].number,
         seenLatestRelease: properties["Seen Latest Release"].checkbox,

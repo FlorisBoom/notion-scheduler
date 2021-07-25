@@ -34,19 +34,6 @@ function getNotionPages() {
                 results.results = results.results.concat(results2.results);
             });
         } while (nextCursor);
-        // if (result.has_more) {
-        //   await Promise.each(Array(10), async () => {
-        //     if (nextCursor) {
-        //       await Notion.databases.query({
-        //         database_id: databaseId,
-        //         start_cursor: nextCursor,
-        //       }).then((result2) => {
-        //         nextCursor = result2.next_cursor;
-        //         result.results = result.results.concat(result2.results);
-        //       });
-        //     }
-        //   });
-        // }
         return results.results.map((page) => NotionPage_1.default(page));
     });
 }
