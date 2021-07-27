@@ -13,7 +13,9 @@ async function run(): Promise<void> {
 
   const pagesDto = await getNotionPages();
 
-  await updatePages(pagesDto);
+  console.log(getCurrentDay());
+
+  // await updatePages(pagesDto);
 }
 
 async function updatePages(pagesDto: NotionPageDto[]): Promise<void> {
@@ -136,15 +138,15 @@ async function updateLatestReleaseManganato(document: any, pageId: string, curre
 function getCurrentDay(): string {
   const currentDate = new Date();
   const currentDay = currentDate.getDay();
-  const weekdays = new Array(7);
+  const weekdays = new Array(8);
 
-  weekdays[0] = "Monday";
-  weekdays[1] = "Tuesday";
-  weekdays[2] = "Wednesday";
-  weekdays[3] = "Thursday";
-  weekdays[4] = "Friday";
-  weekdays[5] = "Saturday";
-  weekdays[6] = "Sunday";
+  weekdays[1] = "Monday";
+  weekdays[2] = "Tuesday";
+  weekdays[3] = "Wednesday";
+  weekdays[4] = "Thursday";
+  weekdays[5] = "Friday";
+  weekdays[6] = "Saturday";
+  weekdays[7] = "Sunday";
 
   return weekdays[currentDay];
 }
