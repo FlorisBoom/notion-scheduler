@@ -13,9 +13,7 @@ async function run(): Promise<void> {
 
   const pagesDto = await getNotionPages();
 
-  console.log(getCurrentDay());
-
-  // await updatePages(pagesDto);
+  await updatePages(pagesDto);
 }
 
 async function updatePages(pagesDto: NotionPageDto[]): Promise<void> {
