@@ -30,6 +30,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+const ramda_1 = __importDefault(require("ramda"));
 const axios_1 = __importDefault(require("axios"));
 const bluebird_1 = require("bluebird");
 const cheerio = __importStar(require("cheerio"));
@@ -43,8 +44,9 @@ function run() {
             message: "Running Notion database sync",
         });
         const pagesDto = yield Database_1.getNotionPages();
-        console.log(getCurrentDay());
-        // await updatePages(pagesDto);
+        const test = ramda_1.default.find(ramda_1.default.propEq('title', 'Deatte 5-byou de Battle'))(pagesDto);
+        console.log(test);
+        yield updatePages([test]);
     });
 }
 function updatePages(pagesDto) {
@@ -96,8 +98,10 @@ function updatePages(pagesDto) {
 function updateLatestReleasePahe(document, pageId, currentRelease) {
     return __awaiter(this, void 0, void 0, function* () {
         const latestRelease = (document("title").text().split("-").length > 1)
-            ? document("title").text().split("-")[1].match(/\d+/g)[0]
+            ? document("title").text().split("-")[document("title").text().split("-").length - 1].match(/\d+/g)[0]
             : document("title").text().split("-")[0].match(/\d+/g)[0];
+        console.log(document("title").text().split("-"));
+        console.log(latestRelease);
         if (currentRelease !== +latestRelease) {
             yield Database_1.updateNotionPage(pageId, +latestRelease);
         }
@@ -162,10 +166,7 @@ function updateLatestReleaseManganato(document, pageId, currentRelease) {
 function getCurrentDay() {
     const currentDate = new Date();
     const currentDay = currentDate.getDay();
-    const weekdays = new Array(7);
-    console.log(weekdays);
-    console.log('currentDate = ', currentDate);
-    console.log('currentDay = ', currentDay);
+    const weekdays = new Array(8);
     weekdays[1] = "Monday";
     weekdays[2] = "Tuesday";
     weekdays[3] = "Wednesday";

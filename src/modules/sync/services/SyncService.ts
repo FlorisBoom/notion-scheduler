@@ -69,7 +69,7 @@ async function updatePages(pagesDto: NotionPageDto[]): Promise<void> {
 
 async function updateLatestReleasePahe(document: any, pageId: string, currentRelease: number): Promise<void> {
   const latestRelease = (document("title").text().split("-").length > 1)
-    ? document("title").text().split("-")[1].match(/\d+/g)[0]
+    ? document("title").text().split("-")[document("title").text().split("-").length - 1].match(/\d+/g)[0]
     : document("title").text().split("-")[0].match(/\d+/g)[0];
 
   if (currentRelease !== +latestRelease) {
