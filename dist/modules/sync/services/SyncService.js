@@ -38,25 +38,23 @@ const definitions_1 = require("../../database/definitions");
 const Database_1 = require("../../database/repositories/Database");
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
+        const t0 = performance.now();
         Logger_1.default.log({
             level: "info",
             message: "Running Notion database sync",
         });
         const pagesDto = yield Database_1.getNotionPages();
-        let test;
-        pagesDto.forEach((page) => {
-            if (page.title === "A Hero's Heart")
-                test = page;
+        yield updatePages(pagesDto);
+        const t1 = performance.now();
+        Logger_1.default.log({
+            level: "info",
+            message: `Notion database sync completed, duration: ${t1 - t0}`,
         });
-        console.log(test);
-        yield updatePages([test]);
     });
 }
 function updatePages(pagesDto) {
     return __awaiter(this, void 0, void 0, function* () {
         yield bluebird_1.Promise.each(pagesDto, (page) => __awaiter(this, void 0, void 0, function* () {
-            console.log(page.releaseSchedule === getCurrentDay());
-            console.log(getCurrentDay());
             if ((!page.releaseSchedule || page.releaseSchedule === getCurrentDay())
                 && !(page.status.includes(definitions_1.EPageStatus.COMPLETED)
                     || page.status.includes(definitions_1.EPageStatus.DROPPED)
@@ -169,9 +167,7 @@ function updateLatestReleaseManganato(document, pageId, currentRelease) {
 function getCurrentDay() {
     const currentDate = new Date();
     const currentDay = currentDate.getDay();
-    const weekdays = new Array(8);
-    console.log(currentDay);
-    console.log(weekdays);
+    const weekdays = new Array(7);
     weekdays[0] = "Sunday";
     weekdays[1] = "Monday";
     weekdays[2] = "Tuesday";

@@ -9,7 +9,7 @@ export = (page: any): NotionPageDto => {
     title: properties.Title.title[0].plain_text,
     link: properties.Link.url,
     status: properties.Status.multi_select.map((select) => select.name),
-    currentProgress: properties["Current Progress"].number,
+    currentProgress: (properties["Current Progress"]) ? properties["Current Progress"].number : 0,
     latestRelease: properties["Latest Release"].number,
     seenLatestRelease: properties["Seen Latest Release"].checkbox,
     releaseSchedule: (properties["Release Schedule"].multi_select.length >= 1)
