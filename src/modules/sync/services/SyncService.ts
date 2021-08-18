@@ -1,3 +1,4 @@
+import { performance } from "perf_hooks";
 import axios from "axios";
 import { Promise } from "bluebird";
 import * as cheerio from "cheerio";
