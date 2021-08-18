@@ -6,6 +6,8 @@ import { NotionPageDto, EPageStatus } from "@database/definitions";
 import { getNotionPages, updateNotionPage } from "@database/repositories/Database";
 
 async function run(): Promise<void> {
+  const t0 = performance.now();
+
   Logger.log({
     level: "info",
     message: "Running Notion database sync",
@@ -14,6 +16,13 @@ async function run(): Promise<void> {
   const pagesDto = await getNotionPages();
 
   await updatePages(pagesDto);
+
+  const t1 = performance.now();
+
+  Logger.log({
+    level: "info",
+    message: `Notion database sync completed, duration: ${Math.round(((t1 - t0) / 1000) * 1000) / 1000}s`,
+  });
 }
 
 async function updatePages(pagesDto: NotionPageDto[]): Promise<void> {
