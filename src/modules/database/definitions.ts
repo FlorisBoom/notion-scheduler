@@ -9,6 +9,7 @@ export type NotionPageDto = {
   seenLatestRelease: boolean;
   releaseSchedule: string | null;
   latestReleaseUpdatedAt: string | null;
+  rating: number | null;
 };
 
 // eslint-disable-next-line no-shadow
