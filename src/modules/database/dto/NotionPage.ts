@@ -18,6 +18,8 @@ export = (page: any): NotionPageDto => {
     latestReleaseUpdatedAt: (properties["Latest Release Updated At"])
       ? properties["Latest Release Updated At"].date.start
       : null,
-    rating: properties.Rating.number,
+    rating: (properties.Rating)
+      ? properties.Rating.number
+      : null,
   };
 };
