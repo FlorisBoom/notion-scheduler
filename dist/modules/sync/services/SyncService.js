@@ -30,6 +30,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+const perf_hooks_1 = require("perf_hooks");
 const axios_1 = __importDefault(require("axios"));
 const bluebird_1 = require("bluebird");
 const cheerio = __importStar(require("cheerio"));
@@ -38,17 +39,17 @@ const definitions_1 = require("../../database/definitions");
 const Database_1 = require("../../database/repositories/Database");
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
-        const t0 = performance.now();
+        const t0 = perf_hooks_1.performance.now();
         Logger_1.default.log({
             level: "info",
             message: "Running Notion database sync",
         });
         const pagesDto = yield Database_1.getNotionPages();
         yield updatePages(pagesDto);
-        const t1 = performance.now();
+        const t1 = perf_hooks_1.performance.now();
         Logger_1.default.log({
             level: "info",
-            message: `Notion database sync completed, duration: ${t1 - t0}`,
+            message: `Notion database sync completed, duration: ${Math.round(((t1 - t0) / 1000) * 1000) / 1000}s`,
         });
     });
 }

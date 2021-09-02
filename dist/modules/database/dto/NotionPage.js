@@ -1,7 +1,7 @@
 "use strict";
 module.exports = (page) => {
     const properties = page.properties;
-    console.log('page = ', page);
+    console.log('properties = ', properties);
     return {
         id: page.id,
         type: properties.Type.select.name,
@@ -16,6 +16,9 @@ module.exports = (page) => {
             : null,
         latestReleaseUpdatedAt: (properties["Latest Release Updated At"])
             ? properties["Latest Release Updated At"].date.start
+            : null,
+        rating: (properties.Rating)
+            ? properties.Rating.number
             : null,
     };
 };
