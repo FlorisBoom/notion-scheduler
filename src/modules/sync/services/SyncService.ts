@@ -63,6 +63,9 @@ async function updatePages(pagesDto: NotionPageDto[]): Promise<void> {
               case "readmanganato.com":
                 await updateLatestReleaseManganato(document, page.id, page.latestRelease);
                 break;
+              case "manganato.com":
+                await updateLatestReleaseManganato(document, page.id, page.latestRelease);
+                break;
               default:
                 break;
             }
@@ -82,7 +85,7 @@ async function updateLatestReleasePahe(document: any, pageId: string, currentRel
     ? document("title").text().split("-")[document("title").text().split("-").length - 1].match(/\d+/g)[0]
     : document("title").text().split("-")[0].match(/\d+/g)[0];
 
-  if (currentRelease !== +latestRelease) {
+  if (currentRelease < +latestRelease) {
     await updateNotionPage(pageId, +latestRelease);
   }
 }
@@ -95,7 +98,7 @@ async function updateLatestReleaseToomics(document: any, pageId: string, current
     .children("span")
     .text();
 
-  if (currentRelease !== +latestRelease) {
+  if (currentRelease < +latestRelease) {
     await updateNotionPage(pageId, +latestRelease);
   }
 }
@@ -110,7 +113,7 @@ async function updateLatestReleaseMangahub(document: any, pageId: string, curren
     .text()
     .replace(/^\D+/g, "");
 
-  if (currentRelease !== +latestRelease) {
+  if (currentRelease < +latestRelease) {
     await updateNotionPage(pageId, +latestRelease);
   }
 }
@@ -125,7 +128,7 @@ async function updateLatestReleaseMangakakalot(document: any, pageId: string, cu
     .text()
     .match(/\d+/g)[0];
 
-  if (currentRelease !== +latestRelease) {
+  if (currentRelease < +latestRelease) {
     await updateNotionPage(pageId, +latestRelease);
   }
 }
@@ -138,7 +141,9 @@ async function updateLatestReleaseManganato(document: any, pageId: string, curre
     .text()
     .match(/\d+/g)[0];
 
-  if (currentRelease !== +latestRelease) {
+  console.log('latestRelease = ', latestRelease)
+
+  if (currentRelease < +latestRelease) {
     await updateNotionPage(pageId, +latestRelease);
   }
 }

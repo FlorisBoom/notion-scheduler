@@ -1,7 +1,6 @@
 "use strict";
 module.exports = (page) => {
     const properties = page.properties;
-    console.log('properties = ', properties);
     return {
         id: page.id,
         type: properties.Type.select.name,

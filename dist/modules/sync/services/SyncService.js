@@ -85,6 +85,9 @@ function updatePages(pagesDto) {
                             case "readmanganato.com":
                                 yield updateLatestReleaseManganato(document, page.id, page.latestRelease);
                                 break;
+                            case "manganato.com":
+                                yield updateLatestReleaseManganato(document, page.id, page.latestRelease);
+                                break;
                             default:
                                 break;
                         }
@@ -104,7 +107,7 @@ function updateLatestReleasePahe(document, pageId, currentRelease) {
         const latestRelease = (document("title").text().split("-").length > 1)
             ? document("title").text().split("-")[document("title").text().split("-").length - 1].match(/\d+/g)[0]
             : document("title").text().split("-")[0].match(/\d+/g)[0];
-        if (currentRelease !== +latestRelease) {
+        if (currentRelease < +latestRelease) {
             yield Database_1.updateNotionPage(pageId, +latestRelease);
         }
     });
@@ -117,7 +120,7 @@ function updateLatestReleaseToomics(document, pageId, currentRelease) {
             .children(".cell-num")
             .children("span")
             .text();
-        if (currentRelease !== +latestRelease) {
+        if (currentRelease < +latestRelease) {
             yield Database_1.updateNotionPage(pageId, +latestRelease);
         }
     });
@@ -132,7 +135,7 @@ function updateLatestReleaseMangahub(document, pageId, currentRelease) {
             .first()
             .text()
             .replace(/^\D+/g, "");
-        if (currentRelease !== +latestRelease) {
+        if (currentRelease < +latestRelease) {
             yield Database_1.updateNotionPage(pageId, +latestRelease);
         }
     });
@@ -147,7 +150,7 @@ function updateLatestReleaseMangakakalot(document, pageId, currentRelease) {
             .children("a")
             .text()
             .match(/\d+/g)[0];
-        if (currentRelease !== +latestRelease) {
+        if (currentRelease < +latestRelease) {
             yield Database_1.updateNotionPage(pageId, +latestRelease);
         }
     });
@@ -160,7 +163,8 @@ function updateLatestReleaseManganato(document, pageId, currentRelease) {
             .children("a")
             .text()
             .match(/\d+/g)[0];
-        if (currentRelease !== +latestRelease) {
+        console.log('latestRelease = ', latestRelease);
+        if (currentRelease < +latestRelease) {
             yield Database_1.updateNotionPage(pageId, +latestRelease);
         }
     });
