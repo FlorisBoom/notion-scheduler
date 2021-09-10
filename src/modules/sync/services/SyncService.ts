@@ -141,8 +141,6 @@ async function updateLatestReleaseManganato(document: any, pageId: string, curre
     .text()
     .match(/\d+/g)[0];
 
-  console.log('latestRelease = ', latestRelease)
-
   if (currentRelease < +latestRelease) {
     await updateNotionPage(pageId, +latestRelease);
   }
