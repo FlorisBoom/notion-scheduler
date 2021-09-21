@@ -66,6 +66,9 @@ async function updatePages(pagesDto: NotionPageDto[]): Promise<void> {
               case "manganato.com":
                 await updateLatestReleaseManganato(document, page.id, page.latestRelease);
                 break;
+              case "mangabuddy.com":
+                await updateLatestReleaseMangabuddy(document, page.id, page.latestRelease);
+                break;
               default:
                 break;
             }
@@ -135,6 +138,19 @@ async function updateLatestReleaseMangakakalot(document: any, pageId: string, cu
 
 async function updateLatestReleaseManganato(document: any, pageId: string, currentRelease: number): Promise<void> {
   const latestRelease = document(".row-content-chapter")
+    .children("li")
+    .first()
+    .children("a")
+    .text()
+    .match(/\d+/g)[0];
+
+  if (currentRelease < +latestRelease) {
+    await updateNotionPage(pageId, +latestRelease);
+  }
+}
+
+async function updateLatestReleaseMangabuddy(document: any, pageId: string, currentRelease: number): Promise<void> {
+  const latestRelease = document(".chapter-list")
     .children("li")
     .first()
     .children("a")

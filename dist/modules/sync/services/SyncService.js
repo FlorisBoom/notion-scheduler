@@ -59,7 +59,8 @@ function updatePages(pagesDto) {
             if ((!page.releaseSchedule || page.releaseSchedule === getCurrentDay())
                 && !(page.status.includes(definitions_1.EPageStatus.COMPLETED)
                     || page.status.includes(definitions_1.EPageStatus.DROPPED)
-                    || page.status.includes(definitions_1.EPageStatus.DONE_AIRING))) {
+                    || page.status.includes(definitions_1.EPageStatus.DONE_AIRING))
+                && page.link === "https://mangabuddy.com/the-hip-guy") {
                 yield axios_1.default.get(page.link)
                     .then((response) => __awaiter(this, void 0, void 0, function* () {
                     if (response.status === 200) {
@@ -87,6 +88,9 @@ function updatePages(pagesDto) {
                                 break;
                             case "manganato.com":
                                 yield updateLatestReleaseManganato(document, page.id, page.latestRelease);
+                                break;
+                            case "mangabuddy.com":
+                                yield updateLatestReleaseMangabuddy(document, page.id, page.latestRelease);
                                 break;
                             default:
                                 break;
@@ -163,10 +167,23 @@ function updateLatestReleaseManganato(document, pageId, currentRelease) {
             .children("a")
             .text()
             .match(/\d+/g)[0];
-        console.log('latestRelease = ', latestRelease);
         if (currentRelease < +latestRelease) {
             yield Database_1.updateNotionPage(pageId, +latestRelease);
         }
+    });
+}
+function updateLatestReleaseMangabuddy(document, pageId, currentRelease) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const latestRelease = document(".chapter-list")
+            .children("li")
+            .first()
+            .children("a")
+            .text()
+            .match(/\d+/g)[0];
+        console.log('latestRelease = ', latestRelease);
+        // if (currentRelease < +latestRelease) {
+        //   await updateNotionPage(pageId, +latestRelease);
+        // }
     });
 }
 function getCurrentDay() {
