@@ -23,3 +23,9 @@ export enum EPageStatus {
   ON_HOLD = "On Hold",
   DONE_AIRING = "Done Airing"
 }
+
+// eslint-disable-next-line no-shadow
+export enum EPageType {
+  MANGA = "Manga",
+  ANIME = "Anime",
+}

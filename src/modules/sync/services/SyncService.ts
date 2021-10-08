@@ -3,7 +3,7 @@ import axios from "axios";
 import { Promise } from "bluebird";
 import * as cheerio from "cheerio";
 import Logger from "@shared/utils/Logger";
-import { NotionPageDto, EPageStatus } from "@database/definitions";
+import { NotionPageDto, EPageStatus, EPageType } from "@database/definitions";
 import { getNotionPages, updateNotionPage } from "@database/repositories/Database";
 
 async function run(): Promise<void> {
@@ -29,7 +29,8 @@ async function run(): Promise<void> {
 async function updatePages(pagesDto: NotionPageDto[]): Promise<void> {
   await Promise.each(pagesDto, async (page: NotionPageDto) => {
     if (
-      (!page.releaseSchedule || page.releaseSchedule === getCurrentDay())
+      page.type !== EPageType.ANIME
+      && (!page.releaseSchedule || page.releaseSchedule === getCurrentDay())
       && !(
         page.status.includes(EPageStatus.COMPLETED)
         || page.status.includes(EPageStatus.DROPPED)
@@ -79,6 +80,22 @@ async function updatePages(pagesDto: NotionPageDto[]): Promise<void> {
             message: `Failed to sync ${page.title} Error: ${err}`,
           });
         });
+    } else if (
+      page.type === EPageType.ANIME
+      && (!page.releaseSchedule || page.releaseSchedule === getCurrentDay())
+      && !(
+        page.status.includes(EPageStatus.COMPLETED)
+        || page.status.includes(EPageStatus.DROPPED)
+        || page.status.includes(EPageStatus.DONE_AIRING))
+    ) {
+      if (page.releaseSchedule === getCurrentDay()) {
+        Logger.log({
+          level: "info",
+          message: `Syncing data for ${page.title}`,
+        });
+
+        await updateNotionPage(page.id, page.latestRelease + 1);
+      }
     }
   });
 }
