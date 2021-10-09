@@ -1,4 +1,5 @@
 import { performance } from "perf_hooks";
+import moment from "moment";
 import axios from "axios";
 import { Promise } from "bluebird";
 import * as cheerio from "cheerio";
@@ -94,7 +95,9 @@ async function updatePages(pagesDto: NotionPageDto[]): Promise<void> {
           message: `Syncing data for ${page.title}`,
         });
 
-        await updateNotionPage(page.id, page.latestRelease + 1);
+        if (moment(page.latestReleaseUpdatedAt).format("YYYY-MM-DD") !== moment().format("YYYY-MM-DD")) {
+          await updateNotionPage(page.id, page.latestRelease + 1);
+        }
       }
     }
   });
