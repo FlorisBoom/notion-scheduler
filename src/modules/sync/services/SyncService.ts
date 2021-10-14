@@ -170,10 +170,14 @@ async function updateLatestReleaseManganato(document: any, pageId: string, curre
 }
 
 async function updateLatestReleaseMangabuddy(document: any, pageId: string, currentRelease: number): Promise<void> {
-  const latestRelease = document(".chapter-list")
+  const latestRelease = document("#chapter-list")
     .children("li")
     .first()
     .children("a")
+    .first()
+    .children("div")
+    .first()
+    .children("strong")
     .text()
     .match(/\d+/g)[0];
 
