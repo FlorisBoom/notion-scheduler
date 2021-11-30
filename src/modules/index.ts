@@ -8,7 +8,7 @@ const app = express();
 app.listen(3000);
 
 const syncJob = new CronJob({
-  cronTime: "30 0/1 * * *", // Every one and a half hour
+  cronTime: "* 0/2 * * *", // Every second hour
   async onTick() {
     try {
       await SyncService.run();

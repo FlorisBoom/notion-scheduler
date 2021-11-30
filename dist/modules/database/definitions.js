@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EPageStatus = void 0;
+exports.EPageType = exports.EPageStatus = void 0;
 // eslint-disable-next-line no-shadow
 var EPageStatus;
 (function (EPageStatus) {
@@ -13,4 +13,10 @@ var EPageStatus;
     EPageStatus["ON_HOLD"] = "On Hold";
     EPageStatus["DONE_AIRING"] = "Done Airing";
 })(EPageStatus = exports.EPageStatus || (exports.EPageStatus = {}));
+// eslint-disable-next-line no-shadow
+var EPageType;
+(function (EPageType) {
+    EPageType["MANGA"] = "Manga";
+    EPageType["ANIME"] = "Anime";
+})(EPageType = exports.EPageType || (exports.EPageType = {}));
 //# sourceMappingURL=definitions.js.map

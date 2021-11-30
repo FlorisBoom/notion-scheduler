@@ -31,6 +31,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 const perf_hooks_1 = require("perf_hooks");
+const moment_1 = __importDefault(require("moment"));
 const axios_1 = __importDefault(require("axios"));
 const bluebird_1 = require("bluebird");
 const cheerio = __importStar(require("cheerio"));
@@ -56,52 +57,69 @@ function run() {
 function updatePages(pagesDto) {
     return __awaiter(this, void 0, void 0, function* () {
         yield bluebird_1.Promise.each(pagesDto, (page) => __awaiter(this, void 0, void 0, function* () {
-            if ((!page.releaseSchedule || page.releaseSchedule === getCurrentDay())
+            if (page.type !== definitions_1.EPageType.ANIME
+                && (!page.releaseSchedule || page.releaseSchedule === getCurrentDay())
                 && !(page.status.includes(definitions_1.EPageStatus.COMPLETED)
                     || page.status.includes(definitions_1.EPageStatus.DROPPED)
-                    || page.status.includes(definitions_1.EPageStatus.DONE_AIRING))
-                && page.link === "https://mangabuddy.com/the-hip-guy") {
-                yield axios_1.default.get(page.link)
-                    .then((response) => __awaiter(this, void 0, void 0, function* () {
-                    if (response.status === 200) {
-                        const url = new URL(page.link);
-                        Logger_1.default.log({
-                            level: "info",
-                            message: `Syncing data for ${page.title} from ${url.hostname}`,
-                        });
-                        const document = cheerio.load(response.data);
-                        switch (url.hostname) {
-                            case "pahe.win":
-                                yield updateLatestReleasePahe(document, page.id, page.latestRelease);
-                                break;
-                            case "toomics.com":
-                                yield updateLatestReleaseToomics(document, page.id, page.latestRelease);
-                                break;
-                            case "mangahub.io":
-                                yield updateLatestReleaseMangahub(document, page.id, page.latestRelease);
-                                break;
-                            case "mangakakalot.com":
-                                yield updateLatestReleaseMangakakalot(document, page.id, page.latestRelease);
-                                break;
-                            case "readmanganato.com":
-                                yield updateLatestReleaseManganato(document, page.id, page.latestRelease);
-                                break;
-                            case "manganato.com":
-                                yield updateLatestReleaseManganato(document, page.id, page.latestRelease);
-                                break;
-                            case "mangabuddy.com":
-                                yield updateLatestReleaseMangabuddy(document, page.id, page.latestRelease);
-                                break;
-                            default:
-                                break;
+                    || page.status.includes(definitions_1.EPageStatus.DONE_AIRING))) {
+                if (page.title === "Jujutsu Kaisen") {
+                    yield axios_1.default.get(page.link)
+                        .then((response) => __awaiter(this, void 0, void 0, function* () {
+                        if (response.status === 200) {
+                            const url = new URL(page.link);
+                            Logger_1.default.log({
+                                level: "info",
+                                message: `Syncing data for ${page.title} from ${url.hostname}`,
+                            });
+                            const document = cheerio.load(response.data);
+                            switch (url.hostname) {
+                                case "pahe.win":
+                                    yield updateLatestReleasePahe(document, page.id, page.latestRelease);
+                                    break;
+                                case "toomics.com":
+                                    yield updateLatestReleaseToomics(document, page.id, page.latestRelease);
+                                    break;
+                                case "mangahub.io":
+                                    yield updateLatestReleaseMangahub(document, page.id, page.latestRelease);
+                                    break;
+                                case "mangakakalot.com":
+                                    yield updateLatestReleaseMangakakalot(document, page.id, page.latestRelease);
+                                    break;
+                                case "readmanganato.com":
+                                    yield updateLatestReleaseManganato(document, page.id, page.latestRelease);
+                                    break;
+                                case "manganato.com":
+                                    yield updateLatestReleaseManganato(document, page.id, page.latestRelease);
+                                    break;
+                                case "mangabuddy.com":
+                                    yield updateLatestReleaseMangabuddy(document, page.id, page.latestRelease);
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
-                    }
-                })).catch((err) => {
-                    Logger_1.default.log({
-                        level: "error",
-                        message: `Failed to sync ${page.title} Error: ${err}`,
+                    })).catch((err) => {
+                        Logger_1.default.log({
+                            level: "error",
+                            message: `Failed to sync ${page.title} Error: ${err}`,
+                        });
                     });
-                });
+                }
+            }
+            else if (page.type === definitions_1.EPageType.ANIME
+                && (!page.releaseSchedule || page.releaseSchedule === getCurrentDay())
+                && !(page.status.includes(definitions_1.EPageStatus.COMPLETED)
+                    || page.status.includes(definitions_1.EPageStatus.DROPPED)
+                    || page.status.includes(definitions_1.EPageStatus.DONE_AIRING))) {
+                if (page.releaseSchedule === getCurrentDay()) {
+                    Logger_1.default.log({
+                        level: "info",
+                        message: `Syncing data for ${page.title}`,
+                    });
+                    if (moment_1.default(page.latestReleaseUpdatedAt).format("YYYY-MM-DD") !== moment_1.default().format("YYYY-MM-DD")) {
+                        yield Database_1.updateNotionPage(page.id, page.latestRelease + 1);
+                    }
+                }
             }
         }));
     });
@@ -174,16 +192,20 @@ function updateLatestReleaseManganato(document, pageId, currentRelease) {
 }
 function updateLatestReleaseMangabuddy(document, pageId, currentRelease) {
     return __awaiter(this, void 0, void 0, function* () {
-        const latestRelease = document(".chapter-list")
+        const latestRelease = document("#chapter-list")
             .children("li")
             .first()
             .children("a")
+            .first()
+            .children("div")
+            .first()
+            .children("strong")
             .text()
             .match(/\d+/g)[0];
         console.log('latestRelease = ', latestRelease);
-        // if (currentRelease < +latestRelease) {
-        //   await updateNotionPage(pageId, +latestRelease);
-        // }
+        if (currentRelease < +latestRelease) {
+            yield Database_1.updateNotionPage(pageId, +latestRelease);
+        }
     });
 }
 function getCurrentDay() {
